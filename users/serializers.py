@@ -2,35 +2,32 @@ from django.db.models import fields
 from rest_framework import serializers
 from .models import User
 
+class UserSerializer(serializers.ModelSerializer):
+  
+  password = serializers.CharField(write_only=True)
 
-class RelatedUserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = (
+      "id",
       "username",
       "first_name",
       "last_name",
       "email",
       "avatar",
-      "superhost"
+      "superhost",
+      "password"
     )
-
-class ReadUserSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = User
-    exclude = ('password', 'user_permissions', 'groups', 'is_active',
-               "is_staff", "is_superuser", "last_login", "date_joined", "favs")
-
-class WriterUserSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = User
-    fields = (
-      "username",
-      "first_name",
-      "last_name",
-      "email"
-    )
+    #extra_kwargs = {'password': {'write_only': True}}
+    read_only_fields = ("id", "superhost", "avatar")
 
   def validate_first_name(self, value):
       print(value)
       return value.upper()
+
+  def create(self, validated_data):
+      user = super().create(validated_data)
+      user.set_password(validated_data['password'])
+      user.save()
+      return user
+      
