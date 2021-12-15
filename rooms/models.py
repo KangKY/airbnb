@@ -15,6 +15,7 @@ class Room(CoreModel):
     check_in = models.TimeField(default="00:00:00")
     check_out = models.TimeField(default="00:00:00")
     instant_book = models.BooleanField(default=False)
+    
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="rooms"
     )

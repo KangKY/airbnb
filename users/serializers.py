@@ -16,7 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
       "email",
       "avatar",
       "superhost",
-      "password"
+      "password",
+      "room_count"
     )
     #extra_kwargs = {'password': {'write_only': True}}
     read_only_fields = ("id", "superhost", "avatar")

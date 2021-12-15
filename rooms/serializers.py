@@ -1,16 +1,24 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 from users.serializers import UserSerializer
-from .models import Room
+from .models import Photo, Room
+
+class PhotoSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Photo
+    exclude = ("room",)
 
 class RoomSerializer(serializers.ModelSerializer):
 
   user = UserSerializer(read_only=True)
+  #photos = PhotoSerializer(read_only=True, many=True)
   is_fav = serializers.SerializerMethodField()
   
 
   class Meta:
     model = Room
     exclude = ("modified",)
+    #fields = '__all__'
     read_only_fields = ("user", "id", "created", "updated")
 
   def validate(self, data):
@@ -36,3 +44,5 @@ class RoomSerializer(serializers.ModelSerializer):
     request =  self.context.get("request")
     room = Room.objects.create(**validated_data, user=request.user)
     return room
+
+

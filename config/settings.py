@@ -148,3 +148,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+# Production 환경일 경우 API Browable 제거
+if not DEBUG:
+  REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+      'rest_framework.renderers.JSONRenderer',]
