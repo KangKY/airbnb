@@ -2,6 +2,20 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 from users.serializers import UserSerializer
 from .models import Photo, Room
+from users.models import User
+
+class RoomUserSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    fields = (
+      "id",
+      "username",
+      "email",
+      "avatar",
+      "superhost",
+      "password",
+      "room_count",
+    )
 
 class PhotoSerializer(serializers.ModelSerializer):
   class Meta:
@@ -10,14 +24,32 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
 
-  user = UserSerializer(read_only=True)
-  #photos = PhotoSerializer(read_only=True, many=True)
+  user = RoomUserSerializer(read_only=True)
+  photos = PhotoSerializer(read_only=True, many=True)
   is_fav = serializers.SerializerMethodField()
   
 
   class Meta:
     model = Room
-    exclude = ("modified",)
+    fields = (
+      "id",
+      "name",
+      "address",
+      "price",
+      "beds",
+      "lat",
+      "lng",
+      "bedrooms",
+      "bathrooms",
+      "check_in",
+      "check_out",
+      "instant_book",
+      "photos",
+      "user",
+      "is_fav"
+    )
+
+    #exclude = ("modified",)
     #fields = '__all__'
     read_only_fields = ("user", "id", "created", "updated")
 

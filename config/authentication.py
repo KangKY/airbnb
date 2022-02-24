@@ -15,13 +15,14 @@ class JWTAuthentication(authentication.BaseAuthentication):
         pk = decoded.get('pk')
         user = User.objects.get(pk=pk)
         return (user, None)
-      except ValueError:
+      
+      except (ValueError, jwt.exceptions.DecodeError, User.DoesNotExist):
         return None
-      except jwt.exceptions.DecodeError:
-        raise exceptions.AuthenticationFailed(detail="JWT Format Decode Error")
-      except jwt.exceptions.InvalidTokenError:
-        raise exceptions.AuthenticationFailed(detail="JWT Format Invalid")
-      except jwt.exceptions.ExpiredSignatureError:
-        raise exceptions.AuthenticationFailed(detail="JWT Expired")
-      except User.DoesNotExist:
-        raise exceptions.AuthenticationFailed('No such user')
+      # except jwt.exceptions.DecodeError:
+      #   raise exceptions.AuthenticationFailed(detail="JWT Format Decode Error")
+      # except jwt.exceptions.InvalidTokenError:
+      #   raise exceptions.AuthenticationFailed(detail="JWT Format Invalid")
+      # except jwt.exceptions.ExpiredSignatureError:
+      #   raise exceptions.AuthenticationFailed(detail="JWT Expired")
+      # except User.DoesNotExist:
+      #   raise exceptions.AuthenticationFailed('No such user')

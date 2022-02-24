@@ -25,7 +25,7 @@ SECRET_KEY = "develop_secret_key"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['7fb8-121-165-242-209.ngrok.io', '127.0.0.1']
 
 
 # Application definition
@@ -110,16 +110,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC"
 
-USE_I18N = True
+# USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
+LANGUAGE_CODE = 'ko-kr' #국가 설정
+TIME_ZONE = 'Asia/Seoul' #시간대 설정
+USE_I18N = True #국제화(Internationalization)
+USE_L10N = True #지역화(localization)
+USE_TZ = False #장고 시간대
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

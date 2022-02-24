@@ -1,4 +1,5 @@
 import jwt
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.conf import settings
 from rest_framework import status
@@ -14,12 +15,12 @@ from .models import User
 from .permissions import IsSelf
 
 
-
 class UsersViewSet(ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
   def get_permissions(self):
+    print(self.action)
     if self.action == 'list':
       permission_classes = [IsAdminUser]
     elif self.action == 'create' or self.action == 'retrieve' or self.action == 'favs':
@@ -28,14 +29,15 @@ class UsersViewSet(ModelViewSet):
       permission_classes = [IsSelf]
     return [permission() for permission in permission_classes]
 
-  
+  @csrf_exempt
   @action(methods=["POST"], detail=False)
   def login(self, request):
-    username = request.data.get("username")
+    email = request.data.get("email")
     password = request.data.get("password")
-    if not username or not password:
+
+    if not email or not password:
       return Response(status=status.HTTP_400_BAD_REQUEST)
-    user = authenticate(username=username, password=password)
+    user = authenticate(email=email, password=password)
     if user is not None:
       encoded_jwt = jwt.encode(
           {"pk": user.pk}, settings.SECRET_KEY, algorithm="HS256")
@@ -46,7 +48,8 @@ class UsersViewSet(ModelViewSet):
   @action(detail=True)
   def favs(self, request, pk):
     user = self.get_object()
-    serializer = RoomSerializer(user.favs.all(), many=True, context={"request":request}).data
+    serializer = RoomSerializer(user.favs.all(), many=True, context={
+                                "request": request}).data
     return Response(serializer)
 
   @favs.mapping.put
@@ -56,7 +59,7 @@ class UsersViewSet(ModelViewSet):
     if pk is not None:
       try:
         room = Room.objects.get(pk=pk)
-        if room in user.favs:
+        if room in user.favs.all():
           user.favs.remove(room)
         else:
           user.favs.add(room)
@@ -65,6 +68,3 @@ class UsersViewSet(ModelViewSet):
         return Response(status=status.HTTP_404_NOT_FOUND)
     else:
       return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-
