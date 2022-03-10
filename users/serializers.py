@@ -2,9 +2,15 @@ from django.db.models import fields
 from rest_framework import serializers
 from rooms.models import Room, Photo
 
-
 #from rooms.serializers import RoomSerializer
 from .models import User
+
+class PasswordSerializer(serializers.Serializer):
+  """
+  Serializer for password change endpoint.
+  """
+  old_password = serializers.CharField(required=True)
+  new_password = serializers.CharField(required=True)
 
 class PhotoSerializer(serializers.ModelSerializer):
   class Meta:
@@ -35,7 +41,7 @@ class UserRoomSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
   
   password = serializers.CharField(write_only=True)
-  rooms = UserRoomSerializer(read_only=True, many=True)
+  #rooms = UserRoomSerializer(read_only=True, many=True)
 
   class Meta:
     model = User
@@ -43,20 +49,17 @@ class UserSerializer(serializers.ModelSerializer):
     fields = (
       "id",
       "username",
-      # "first_name",
-      # "last_name",
       "email",
       "avatar",
       "superhost",
       "password",
       "room_count",
-      "rooms"
     )
     #extra_kwargs = {'password': {'write_only': True}}
     read_only_fields = ("id", "superhost", "avatar")
 
   def validate_first_name(self, value):
-      return value.upper()
+    return value.upper()
 
   def create(self, validated_data):
     print(validated_data)

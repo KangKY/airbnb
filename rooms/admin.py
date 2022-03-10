@@ -14,3 +14,19 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(models.Photo)
 class PhotoAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(models.Amenity)
+class AmenityAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.HouseRule)
+class HouseRuleAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.Facility)
+class FacilityAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.RoomType)
+class RoomTypeAdmin(admin.ModelAdmin):
+    pass

@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "develop_secret_key"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +44,9 @@ PROJECT_APPS = [
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
     "rooms.apps.RoomsConfig",
+    "reviews.apps.ReviewsConfig",
+    "reservations.apps.ReservationsConfig",
+    "conversations.apps.ConversationsConfig"
 ]
 
 THIRD_PARTY_APPS = [
@@ -86,10 +89,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    # },
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("DATEBASE"),
+        'HOST' : os.environ.get("HOST"),
+        'PORT' :os.environ.get("PORT"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD':os.environ.get("DB_PASSWORD"),
     }
 }
 

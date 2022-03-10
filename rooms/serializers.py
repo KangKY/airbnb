@@ -10,11 +10,7 @@ class RoomUserSerializer(serializers.ModelSerializer):
     fields = (
       "id",
       "username",
-      "email",
       "avatar",
-      "superhost",
-      "password",
-      "room_count",
     )
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -24,8 +20,8 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
 
-  user = RoomUserSerializer(read_only=True)
-  photos = PhotoSerializer(read_only=True, many=True)
+  host = RoomUserSerializer(read_only=True)
+  #photos = PhotoSerializer(read_only=True, many=True)
   is_fav = serializers.SerializerMethodField()
   
 
@@ -45,13 +41,13 @@ class RoomSerializer(serializers.ModelSerializer):
       "check_out",
       "instant_book",
       "photos",
-      "user",
+      "host",
       "is_fav"
     )
 
     #exclude = ("modified",)
     #fields = '__all__'
-    read_only_fields = ("user", "id", "created", "updated")
+    #read_only_fields = ("user", "id", "created", "updated")
 
   def validate(self, data):
     if self.instance:
@@ -74,7 +70,7 @@ class RoomSerializer(serializers.ModelSerializer):
   
   def create(self, validated_data):
     request =  self.context.get("request")
-    room = Room.objects.create(**validated_data, user=request.user)
+    room = Room.objects.create(**validated_data, host=request.user)
     return room
 
 

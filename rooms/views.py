@@ -13,6 +13,7 @@ class RoomViewSet(ModelViewSet):
   queryset = Room.objects.all()
   serializer_class = RoomSerializer
   
+
   def get_permissions(self):
     if self.action == 'list' or self.action == "retrieve":
       permission_classes = [AllowAny]
@@ -21,6 +22,14 @@ class RoomViewSet(ModelViewSet):
     else:
       permission_classes = [IsOwner]
     return [permission() for permission in permission_classes]
+
+  @action(detail=False)
+  def content_based_filtering(self):
+    return []
+
+  @action(detail=False)
+  def collaborative_filtering(self):
+    return []
 
   @action(detail=False)
   def search(self, request):
